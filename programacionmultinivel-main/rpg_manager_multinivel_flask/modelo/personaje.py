@@ -20,18 +20,18 @@ class Personaje:
     # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
     # <<< FIN SALA 1.1
 
-    def a_dict(self):
-        """Representación simple para la API JSON y las plantillas."""
-        return {
-            "id": self.id,
-            "nombre": self.nombre,
-            "clase": self.clase,
-            "nivel": self.nivel,
-            "vida": self.vida,
-            "ataque": self.ataque,
-            "oro": str(self.oro),
-        }
+class Personaje:
+    """Datos comunes a todos los personajes."""
 
+    clase = "Personaje"
+    def __init__(self, nombre, nivel=1, vida=100, ataque=10, oro=Decimal("0"), id=None):
+        self.id = id
+        self.nombre = nombre
+        self.nivel = nivel
+        self.vida = vida
+        self.ataque = ataque
+        self.oro = Decimal(str(oro))
+        
     def __repr__(self):
         return f"{self.clase}(id={self.id}, nombre={self.nombre!r}, nivel={self.nivel}, vida={self.vida})"
 
