@@ -25,8 +25,9 @@ db.personajes.findOne(
 // <<< FIN SALA B.2
 db.personajes.findOne(
   { id_personaje: 1 },
-  { _id: 0, nombre: 1, inventario: 1 }
+  { _id: 0, nombre: 1, inventario:  1 }
 );
+
 
 // ── 3. ¿Se puede borrar a Thorgar? (eliminar) ────────────────────────
 // combates guarda NOMBRES, no llaves foráneas: nada impide el borrado.
