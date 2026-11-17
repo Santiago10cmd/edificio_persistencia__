@@ -26,6 +26,13 @@ db = db.getSiblingDB("rpg_manager");
   // Arma este bloque en el Edificio de la Persistencia (pestaña MongoDB · JS),
   // pulsa «Copiar bloque» y pégalo entre estas dos marcas.
   // <<< FIN SALA B.4
+  const arqueros = db.personajes.find({ precision: { $lt: 1 } }).toArray();
+arqueros.forEach(doc => {
+  db.personajes.updateOne(
+    { _id: doc._id },
+    { $set: { precision: Math.round(doc.precision * 100) } }
+  );
+});
   print("Arqueros ajustados: " + arqueros.length);
 
   // 2. Id numérico para cada personaje (como el AUTO_INCREMENT de MariaDB)
