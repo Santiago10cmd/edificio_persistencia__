@@ -41,7 +41,7 @@ db.combates.countDocuments({
     { defensor: "Thorgar" },
     { ganador: "Thorgar" }
   ]
-});
+}) ;
 // Esta línea SÍ funciona en MongoDB (cuidado: deja combates huérfanos):
 // db.personajes.deleteOne({ id_personaje: 1 });
 
