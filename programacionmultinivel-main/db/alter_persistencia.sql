@@ -18,15 +18,6 @@ USE rpg_manager;
 -- pulsa «Copiar bloque» y pégalo entre estas dos marcas.
 -- <<< FIN SALA B.4
 
-UPDATE personaje p JOIN clase c ON p.id_clase = c.id_clase
-   SET p.precision_tiro = 70
- WHERE c.nombre = 'Arquero' AND p.precision_tiro IS NULL;
-
--- Verificación: Magos con mana y Arqueros con precisión
-SELECT p.nombre, c.nombre AS clase, p.mana, p.precision_tiro
-  FROM personaje p JOIN clase c ON p.id_clase = c.id_clase
- ORDER BY p.id_personaje;
-
 ALTER TABLE personaje
   ADD COLUMN IF NOT EXISTS mana           INT NULL CHECK (mana >= 0),
   ADD COLUMN IF NOT EXISTS precision_tiro INT NULL CHECK (precision_tiro BETWEEN 0 AND 100);
