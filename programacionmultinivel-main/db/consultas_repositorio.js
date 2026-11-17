@@ -15,7 +15,7 @@ db = db.getSiblingDB("rpg_manager");
 db.personajes.findOne(
   { id_personaje: 2 },
   { _id: 0, inventario: 0, misiones: 0 }
-);
+) ;
 
 // ── 2. El inventario de un personaje (listarInventario) ──────────────
 // El inventario es un arreglo embebido: se pide solo ese campo.
