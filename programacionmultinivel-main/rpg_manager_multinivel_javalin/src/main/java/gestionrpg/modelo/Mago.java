@@ -43,3 +43,6 @@ public class Mago extends Personaje {
     public int getMana() { return mana; }
 }
 }
+
+
+EP2.eyJ2IjoyLCJ3IjoiU2FudGlhZ28gQWxleGFuZGVyIFJ1aXogQXJpYXMgMjAyMjI2NzgwMzMiLCJnIjoiMzAyIiwicyI6IjIwMjYtMTEtMTdUMTI6MDM6NTYuNzYxWiIsImUiOiIiLCJwIjoiMzMzMzMzMTAwMDAwMDAwMDAwMDAwMDAwMCJ9.ebx9N0M_C8Q1CPyq
