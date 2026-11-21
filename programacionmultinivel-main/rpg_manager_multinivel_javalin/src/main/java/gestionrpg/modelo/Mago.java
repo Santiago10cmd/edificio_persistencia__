@@ -1,0 +1,48 @@
+package gestionrpg.modelo;
+
+import java.math.BigDecimal;
+
+public class Mago extends Personaje {
+
+    public static final int MANA_POR_DEFECTO = 100;
+
+    private int mana;
+
+    // >>> SALA 1.2 · Mago y Arquero: herencia
+    // Arma este bloque en el Edificio de la Persistencia (pestaña Java),
+    // pulsa «Copiar bloque» y pégalo entre estas dos marcas.
+    public class Mago extends Personaje {
+
+    public static final int MANA_POR_DEFECTO = 100;
+
+    private int mana;
+    public Mago(Integer id, String nombre, int nivel, int vida, int ataque, BigDecimal oro, int mana) {
+        super(id, nombre, nivel, vida, ataque, oro);
+        this.mana = mana;
+    }
+
+    @Override
+    public String getClase() { return "Mago"; }
+
+    public int getMana() { return mana; }
+}
+    // <<< FIN SALA 1.2
+    public class Mago extends Personaje {
+
+    public static final int MANA_POR_DEFECTO = 100;
+
+    private int mana;
+    public Mago(Integer id, String nombre, int nivel, int vida, int ataque, BigDecimal oro, int mana) {
+        super(id, nombre, nivel, vida, ataque, oro);
+        this.mana = mana;
+    }
+
+    @Override
+    public String getClase() { return "Mago"; }
+
+    public int getMana() { return mana; }
+}
+}
+
+
+//EP2.eyJ2IjoyLCJ3IjoiU2FudGlhZ28gQWxleGFuZGVyIFJ1aXogQXJpYXMgMjAyMjI2NzgwMzMiLCJnIjoiMzAyIiwicyI6IjIwMjYtMTEtMTdUMTI6MDM6NTYuNzYxWiIsImUiOiIyMDI2LTExLTIxVDA0OjUzOjExLjg2MloiLCJwIjoiMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMyJ9.0cwpqQDcgc88lyso
