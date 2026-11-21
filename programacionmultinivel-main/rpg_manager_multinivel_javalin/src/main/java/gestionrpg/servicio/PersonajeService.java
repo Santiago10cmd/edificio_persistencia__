@@ -41,6 +41,18 @@ public class PersonajeService {
     // >>> SALA 3.2 · Obtener: de null a 404
     // Arma este bloque en el Edificio de la Persistencia (pestaña Java),
     // pulsa «Copiar bloque» y pégalo entre estas dos marcas.
+            Personaje p = FabricaPersonajes.crear(clase, null, nombre, nivel, vida, ataque,
+                oro.setScale(2, RoundingMode.HALF_UP), null, null);
+        try {
+            return repositorio.guardar(p);
+        } catch (DatoDuplicadoException e) {
+            throw new ValidacionException("Ya existe un personaje llamado " + nombre);
+rpg_manager_multinivel_flask/servicio/personaje_service.py
+        personaje = crear_personaje(clase, nombre, nivel, vida, ataque, oro)
+        try:
+            return self._repositorio.guardar(personaje)
+        except DatoDuplicadoException:
+            raise ValidacionException(f"Ya existe un personaje llamado {nombre}")
     // <<< FIN SALA 3.2
     }
 
