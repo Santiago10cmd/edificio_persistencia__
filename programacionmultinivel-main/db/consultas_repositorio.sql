@@ -35,6 +35,11 @@ SELECT i.nombre, i.tipo, i.valor, inv.cantidad
 -- Arma este bloque en el Edificio de la Persistencia (pestaña MariaDB · SQL),
 -- pulsa «Copiar bloque» y pégalo entre estas dos marcas.
 -- <<< FIN SALA B.3
+SELECT COUNT(*) AS combates_de_thorgar
+  FROM combate
+ WHERE id_atacante = 1
+    OR id_defensor = 1
+    OR id_ganador = 1;
 -- Esta línea falla con el error 1451 (llave foránea en uso):
 -- DELETE FROM personaje WHERE id_personaje = 1;
 
