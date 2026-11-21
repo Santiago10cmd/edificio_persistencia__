@@ -24,11 +24,24 @@ import java.util.Properties;
 public class Main {
 
     public static Properties cargarConfiguracion() {
-        Path ruta = Path.of("config.properties");    // raíz del proyecto en NetBeans
+        Path directorio = Path.of("").toAbsolutePath();
+        Path proyecto = directorio.resolve("rpg_manager_multinivel_javalin");
+        Path ruta = directorio.resolve("config.properties");
+        if (!Files.exists(ruta) && Files.exists(proyecto.resolve("config.properties"))) {
+            ruta = proyecto.resolve("config.properties");
+        }
         if (!Files.exists(ruta)) {
-            System.err.println("No existe config.properties en " + ruta.toAbsolutePath().getParent()
-                    + ". Copia config.example.properties como config.properties y pon tus datos.");
-            System.exit(1);
+            Path ejemplo = directorio.resolve("config.example.properties");
+            if (!Files.exists(ejemplo)) {
+                ejemplo = proyecto.resolve("config.example.properties");
+            }
+            if (!Files.exists(ejemplo)) {
+                throw new IllegalStateException("No se encontró config.properties ni config.example.properties "
+                        + "en " + directorio + " o " + proyecto);
+            }
+            ruta = ejemplo;
+            System.err.println("Aviso: no existe config.properties; se usará la configuración de ejemplo "
+                    + "(repositorio en memoria).");
         }
         Properties cfg = new Properties();
         try (Reader lector = new InputStreamReader(Files.newInputStream(ruta), StandardCharsets.UTF_8)) {
@@ -50,7 +63,7 @@ public class Main {
 
         Javalin app = Javalin.create();
         controlador.registrarRutas(app);
-        app.start(7070)
+        app.start(7070);
         // <<< FIN SALA 4.1
         System.out.println("RPG Manager en http://localhost:7070/personajes · repositorio: "
                 + cfg.getProperty("repositorio"));

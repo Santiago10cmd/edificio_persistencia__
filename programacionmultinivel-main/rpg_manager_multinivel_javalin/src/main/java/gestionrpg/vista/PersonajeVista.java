@@ -36,7 +36,6 @@ public final class PersonajeVista {
                 .replace(">", "&gt;")
                 .replace("\"", "&quot;")
                 .replace("'", "&#39;");
-    }
         // <<< FIN SALA 4.4
     }
 

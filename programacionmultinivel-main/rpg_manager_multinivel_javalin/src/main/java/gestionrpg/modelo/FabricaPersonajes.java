@@ -21,12 +21,6 @@ public final class FabricaPersonajes {
     public static Personaje crear(String clase, Integer id, String nombre, int nivel, int vida,
                                   int ataque, BigDecimal oro, Integer mana, Integer precision) {
         // >>> SALA 1.3 · La fábrica de personajes
-        // Arma este bloque en el Edificio de la Persistencia (pestaña Java),
-        // pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-        
-        // <<< FIN SALA 1.3
-           public static Personaje crear(String clase, Integer id, String nombre, int nivel, int vida,
-                                  int ataque, BigDecimal oro, Integer mana, Integer precision) {
         switch (clase) {
             case "Guerrero":
                 return new Guerrero(id, nombre, nivel, vida, ataque, oro);
@@ -39,7 +33,6 @@ public final class FabricaPersonajes {
             default:
                 throw new IllegalArgumentException("Clase desconocida: " + clase);
         }
-    }
-        }
+        // <<< FIN SALA 1.3
     }
 }

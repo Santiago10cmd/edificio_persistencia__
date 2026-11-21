@@ -16,7 +16,7 @@ public abstract class Personaje {
 
     // >>> SALA 1.1 · Personaje: la clase base
     // Arma este bloque en el Edificio de la Persistencia (pestaña Java),
-        protected Personaje(Integer id, String nombre, int nivel, int vida, int ataque, BigDecimal oro) {
+    protected Personaje(Integer id, String nombre, int nivel, int vida, int ataque, BigDecimal oro) {
         this.id = id;
         this.nombre = nombre;
         this.nivel = nivel;
@@ -28,10 +28,6 @@ public abstract class Personaje {
     /** "Guerrero", "Mago" o "Arquero": lo define cada subclase. */
     public abstract String getClase();
     // <<< FIN SALA 1.1
-    }
-
-    /** "Guerrero", "Mago" o "Arquero": lo define cada subclase. */
-    public abstract String getClase();
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -41,16 +37,4 @@ public abstract class Personaje {
     public void setVida(int vida) { this.vida = vida; }
     public int getAtaque() { return ataque; }
     public BigDecimal getOro() { return oro; }
-    
-        protected Personaje(Integer id, String nombre, int nivel, int vida, int ataque, BigDecimal oro) {
-        this.id = id;
-        this.nombre = nombre;
-        this.nivel = nivel;
-        this.vida = vida;
-        this.ataque = ataque;
-        this.oro = oro;
-    }
-
-
-
 }

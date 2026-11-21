@@ -85,12 +85,6 @@ public class RepositorioMariaDB implements PersonajeRepository {
         return resultado;
     }
 
-    @Override
-    public Personaje buscarPorId(int id) {
-        List<Personaje> encontrados = consultar(SELECT_PERSONAJE + " WHERE p.id_personaje = ?", id);
-        return encontrados.isEmpty() ? null : encontrados.get(0);
-    }
-
     /** Pone en el PreparedStatement los campos que comparten INSERT y UPDATE (posiciones 1 a 8). */
     private void ponerCampos(PreparedStatement ps, Personaje p) throws SQLException {
         ps.setString(1, p.getNombre());
