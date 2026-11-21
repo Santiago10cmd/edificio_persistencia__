@@ -23,6 +23,7 @@ public final class FabricaPersonajes {
         // >>> SALA 1.3 · La fábrica de personajes
         // Arma este bloque en el Edificio de la Persistencia (pestaña Java),
         // pulsa «Copiar bloque» y pégalo entre estas dos marcas.
+        
         // <<< FIN SALA 1.3
            public static Personaje crear(String clase, Integer id, String nombre, int nivel, int vida,
                                   int ataque, BigDecimal oro, Integer mana, Integer precision) {

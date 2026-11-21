@@ -110,7 +110,16 @@ def crear_personaje(clase, nombre, nivel=1, vida=100, ataque=10, oro=Decimal("0"
 # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
 # <<< FIN SALA 1.4
 
-    def a_dict(self):
+class Item:
+    """Un ítem dentro del inventario de un personaje."""
+
+    def __init__(self, nombre, tipo, valor, cantidad=1):
+        self.nombre = nombre
+        self.tipo = tipo
+        self.valor = valor
+        self.cantidad = cantidad
+    
+def a_dict(self):
         return {"nombre": self.nombre, "tipo": self.tipo, "valor": self.valor, "cantidad": self.cantidad}
 
     def __repr__(self):
