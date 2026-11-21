@@ -1,0 +1,531 @@
+A.1 py
+    try:
+        nuevo = service.crear(NOMBRE_PRUEBA, "Arquero", nivel=3, vida=90, ataque=18, oro="12.50")
+    except ValidacionException as e:
+        print(f"\n4. No se pudo crear: {e}")
+        return
+    print(f"\n4. Creado: {nuevo.nombre} con id {nuevo.id}")
+
+    actualizado = service.actualizar_vida(nuevo.id, 55)
+    print(f"5. Vida de {actualizado.nombre} actualizada a {service.obtener(nuevo.id).vida}")
+
+    service.eliminar(nuevo.id)
+    print(f"6. {NOMBRE_PRUEBA} eliminado")
+
+    imprimir_lista("7. Todos los personajes otra vez", service.listar())
+java
+        Personaje nuevo;
+        try {
+            nuevo = service.crear(NOMBRE_PRUEBA, "Arquero", 3, 90, 18, new BigDecimal("12.50"));
+        } catch (ValidacionException e) {
+            System.out.println("\n4. No se pudo crear: " + e.getMessage());
+            return;
+        }
+        System.out.println("\n4. Creado: " + nuevo.getNombre() + " con id " + nuevo.getId());
+
+        service.actualizarVida(nuevo.getId(), 55);
+        System.out.println("5. Vida de " + nuevo.getNombre() + " actualizada a "
+                + service.obtener(nuevo.getId()).getVida());
+
+        service.eliminar(nuevo.getId());
+        System.out.println("6. " + NOMBRE_PRUEBA + " eliminado");
+
+        imprimirLista("7. Todos los personajes otra vez", service.listar());
+piso 4
+4.4 java
+    private static String escapar(Object valor) {
+        if (valor == null) {
+            return "";
+        }
+        // El & va primero: los demás reemplazos crean textos que empiezan por &
+        return valor.toString()
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
+    }
+4.4 py
+{% for item in inventario %}
+  <tr>
+    <td>{{ item.nombre }}</td><td>{{ item.tipo }}</td>
+    <td class="text-end">{{ item.valor }}</td><td class="text-end">{{ item.cantidad }}</td>
+    <td class="text-end">
+      <form method="post" action="{{ url_for('personajes.quitar_item', id=p.id) }}">
+        <input type="hidden" name="item" value="{{ item.nombre }}">
+        <button class="btn btn-sm btn-outline-danger" type="submit">Quitar</button>
+      </form>
+    </td>
+  </tr>
+{% else %}
+  <tr><td colspan="5" class="text-center text-muted py-3">Inventario vacío.</td></tr>
+{% endfor %}
+____________________
+4.3 java
+    private void agregarItem(Context ctx) {
+        int id = idDe(ctx);
+        try {
+            service.agregarItem(id, ctx.formParam("item"), entero(ctx.formParam("cantidad"), "cantidad", 1));
+        } catch (ValidacionException e) {
+            ctx.redirect("/personajes/" + id + "?error=" + codificar(e.getMessage()));
+            return;
+        }
+        ctx.redirect("/personajes/" + id);
+    }
+
+4.3 py
+    @bp.post("/personajes/<int:id>/inventario")
+    def agregar_item(id):
+        try:
+            service.agregar_item(id, request.form.get("item"), request.form.get("cantidad", 1))
+        except PersonajeNoEncontradoException as e:
+            return render_template("error.html", mensaje=str(e)), 404
+        except ValidacionException as e:
+            return redirect(url_for("personajes.detalle", id=id, error=str(e)))
+        return redirect(url_for("personajes.detalle", id=id))
+
+____________________________
+4.2 java
+    private void crear(Context ctx) {
+        Map<String, String> datos = new HashMap<>();
+        for (String campo : List.of("nombre", "clase", "nivel", "vida", "ataque", "oro")) {
+            String valor = ctx.formParam(campo);
+            if (valor != null) {
+                datos.put(campo, valor);
+            }
+        }
+        try {
+            service.crear(datos.get("nombre"), datos.get("clase"),
+                    entero(datos.get("nivel"), "nivel", 1), entero(datos.get("vida"), "vida", 100),
+                    entero(datos.get("ataque"), "ataque", 10), dinero(datos.get("oro")));
+        } catch (ValidacionException e) {
+            ctx.status(400).html(PersonajeVista.formulario(datos, e.getMessage(), motor));
+            return;
+        }
+        ctx.redirect("/personajes");
+    }
+4.2 py
+
+    @bp.post("/personajes")
+    def crear():
+        datos = request.form
+        try:
+            service.crear(datos.get("nombre"), datos.get("clase"), datos.get("nivel", 1),
+                          datos.get("vida", 100), datos.get("ataque", 10), datos.get("oro", 0))
+        except ValidacionException as e:
+            return render_template("nuevo.html", datos=datos, error=str(e)), 400
+        return redirect(url_for("personajes.listar"))
+_____________________________
+4.1 java
+    public static void main(String[] args) {
+        Properties cfg = cargarConfiguracion();
+        PersonajeRepository repositorio = RepositoryFactory.crear(cfg);     // aquí se elige el motor
+        PersonajeService service = new PersonajeService(repositorio);       // inyección por constructor
+        PersonajeControlador controlador = new PersonajeControlador(service, cfg.getProperty("repositorio"));
+
+        Javalin app = Javalin.create();
+        controlador.registrarRutas(app);
+        app.start(7070);
+        System.out.println("RPG Manager en http://localhost:7070/personajes · repositorio: "
+                + cfg.getProperty("repositorio"));
+    }
+4.1 py
+def crear_app(cfg=None, repositorio=None):
+    cfg = cfg or leer_configuracion()
+    repositorio = repositorio or crear_repositorio(cfg)   # aquí se elige el motor
+    service = PersonajeService(repositorio)                # inyección por constructor
+
+    app = Flask(__name__)
+    app.json.ensure_ascii = False
+    app.register_blueprint(crear_controlador(service, cfg.get("app", "repositorio")))
+    return app
+
+_________________________________________________________
+piso 3
+3.4 java
+
+    public List<Item> agregarItem(int id, String nombreItem, int cantidad) {
+        obtener(id);
+        if (cantidad < 1 || cantidad > 99) {
+            throw new ValidacionException("La cantidad debe estar entre 1 y 99");
+        }
+        boolean existe = false;
+        for (Item item : repositorio.listarCatalogo()) {
+            if (item.getNombre().equals(nombreItem)) {
+                existe = true;
+            }
+        }
+        if (!existe) {
+            throw new ValidacionException("No existe el ítem " + nombreItem);
+        }
+        repositorio.agregarItem(id, nombreItem, cantidad);
+        return repositorio.listarInventario(id);
+    }
+3.4 py
+    def agregar_item(self, id, nombre_item, cantidad=1):
+        self.obtener(id)
+        cantidad = self._entero(cantidad, "cantidad")
+        if not 1 <= cantidad <= 99:
+            raise ValidacionException("La cantidad debe estar entre 1 y 99")
+        nombres = []
+        for item in self._repositorio.listar_catalogo():
+            nombres.append(item.nombre)
+        if nombre_item not in nombres:
+            raise ValidacionException(f"No existe el ítem {nombre_item}")
+        self._repositorio.agregar_item(id, nombre_item, cantidad)
+        return self._repositorio.listar_inventario(id)
+_________________________________________________________________________
+
+3.3 java
+   validarClase(clase);
+        if (nivel < 1 || nivel > 100) {
+            throw new ValidacionException("El nivel debe estar entre 1 y 100");
+        }
+        if (vida < 0) {
+            throw new ValidacionException("La vida no puede ser negativa");
+        }
+        if (ataque < 0) {
+            throw new ValidacionException("El ataque no puede ser negativo");
+        }
+        if (oro == null || oro.signum() < 0) {
+            throw new ValidacionException("El oro no puede ser negativo");
+        }
+        Personaje p = FabricaPersonajes.crear(clase, null, nombre, nivel, vida, ataque,
+                oro.setScale(2, RoundingMode.HALF_UP), null, null);
+        try {
+            return repositorio.guardar(p);
+        } catch (DatoDuplicadoException e) {
+            throw new ValidacionException("Ya existe un personaje llamado " + nombre);
+        }
+    }
+3.3 py
+        if not 1 <= nivel <= 100:
+            raise ValidacionException("El nivel debe estar entre 1 y 100")
+        if vida < 0:
+            raise ValidacionException("La vida no puede ser negativa")
+        if ataque < 0:
+            raise ValidacionException("El ataque no puede ser negativo")
+        if oro < 0:
+            raise ValidacionException("El oro no puede ser negativo")
+        personaje = crear_personaje(clase, nombre, nivel, vida, ataque, oro)
+        try:
+            return self._repositorio.guardar(personaje)
+        except DatoDuplicadoException:
+            raise ValidacionException(f"Ya existe un personaje llamado {nombre}")
+
+___________________________________________________
+3.2 java
+    public Personaje obtener(int id) {
+        Personaje p = repositorio.buscarPorId(id);
+        if (p == null) {
+            throw new PersonajeNoEncontradoException(id);
+        }
+        return p;
+    }
+
+    public List<Item> inventario(int id) {
+        obtener(id);    // 404 si el personaje no existe
+        return repositorio.listarInventario(id);
+
+3.2 py
+    def obtener(self, id):
+        personaje = self._repositorio.buscar_por_id(id)
+        if personaje is None:
+            raise PersonajeNoEncontradoException(f"No existe el personaje {id}")
+        return personaje
+
+    def inventario(self, id):
+        self.obtener(id)    # 404 si el personaje no existe
+        return self._repositorio.listar_inventario(id)
+_____________________________________
+3.1 java
+public class PersonajeService {
+
+    private final PersonajeRepository repositorio;
+
+    public PersonajeService(PersonajeRepository repositorio) {
+        this.repositorio = repositorio;
+    }
+
+    // ---------- consultas ----------
+
+    public List<Personaje> listar() {
+        return repositorio.listarTodos();
+
+3.1 py
+
+class PersonajeService:
+
+    def __init__(self, repositorio):
+        self._repositorio = repositorio
+
+    # ---------- consultas ----------
+
+    def listar(self):
+        return self._repositorio.listar_todos()
+____________________________________________
+
+piso 2
+2.8 java
+        long encontrados = personajes.updateOne(
+                and(eq("id_personaje", idPersonaje), eq("inventario.item", nombreItem)),
+                Updates.inc("inventario.$.cantidad", cantidad)).getMatchedCount();
+        if (encontrados > 0) {
+            return true;
+        }
+        // 2. Si no lo tiene: se copia del catálogo y se agrega al arreglo con $push
+        Document delCatalogo = items.find(eq("nombre", nombreItem)).first();
+        if (delCatalogo == null) {
+            return false;
+        }
+        Document nuevo = new Document("item", delCatalogo.getString("nombre"))
+                .append("tipo", delCatalogo.getString("tipo"))
+                .append("valor", numero(delCatalogo.get("valor"), 0))
+                .append("cantidad", cantidad);
+        return personajes.updateOne(eq("id_personaje", idPersonaje),
+                Updates.push("inventario", nuevo)).getMatchedCount() > 0;
+
+ 
+2.8 py
+        resultado = self._personajes.update_one(
+            {"id_personaje": id_personaje, "inventario.item": nombre_item},
+            {"$inc": {"inventario.$.cantidad": cantidad}})
+        if resultado.matched_count > 0:
+            return True
+        # 2. Si no lo tiene: se copia del catálogo y se agrega al arreglo con $push
+        del_catalogo = self._items.find_one({"nombre": nombre_item})
+        if del_catalogo is None:
+            return False
+        nuevo = {"item": del_catalogo["nombre"], "tipo": del_catalogo["tipo"],
+                 "valor": del_catalogo["valor"], "cantidad": cantidad}
+        resultado = self._personajes.update_one({"id_personaje": id_personaje},
+                                                {"$push": {"inventario": nuevo}})
+        return resultado.matched_count > 0
+
+________________________________________
+2.7 java
+        String tipo = cfg.getProperty("repositorio", "").trim().toLowerCase();
+        switch (tipo) {
+            case "memoria":
+                return new RepositorioMemoria();
+            case "mariadb":
+                return new RepositorioMariaDB(
+                        cfg.getProperty("mariadb.host"),
+                        cfg.getProperty("mariadb.puerto"),
+                        cfg.getProperty("mariadb.base"),
+                        cfg.getProperty("mariadb.usuario"),
+                        cfg.getProperty("mariadb.clave"));
+            case "mongo":
+                return new RepositorioMongo(cfg.getProperty("mongo.uri"), cfg.getProperty("mongo.base"));
+            default:
+                // Mejor que la app no arranque a que falle en la primera petición
+                throw new IllegalStateException(
+                        "Repositorio desconocido: '" + tipo + "'. Usa memoria, mariadb o mongo.");
+
+2.7 py
+    tipo = cfg.get("app", "repositorio", fallback="").strip().lower()
+    if tipo == "memoria":
+        return RepositorioMemoria()
+    elif tipo == "mariadb":
+        return RepositorioMariaDB(
+            host=cfg.get("mariadb", "host"),
+            puerto=cfg.get("mariadb", "puerto"),
+            base=cfg.get("mariadb", "base"),
+            usuario=cfg.get("mariadb", "usuario"),
+            clave=cfg.get("mariadb", "clave"))
+    elif tipo == "mongo":
+        return RepositorioMongo(uri=cfg.get("mongo", "uri"), base=cfg.get("mongo", "base"))
+    # Mejor que la app no arranque a que falle en la primera petición
+    raise ValueError(f"Repositorio desconocido: '{tipo}'. Usa memoria, mariadb o mongo.")
+_______________________________________________________
+2.6 java
+        if (personajes.find(eq("nombre", p.getNombre())).first() != null) {
+            throw new DatoDuplicadoException(p.getNombre(), null);
+        }
+        Document documento = camposDe(p)
+                .append("inventario", new ArrayList<Document>())
+                .append("misiones", new ArrayList<Document>())
+                .append("id_personaje", siguienteId());
+        try {
+            personajes.insertOne(documento);
+        } catch (MongoWriteException e) {
+            if (esDuplicado(e)) {
+                throw new DatoDuplicadoException(p.getNombre(), e);
+            }
+            throw e;
+        }
+        p.setId(documento.getInteger("id_personaje"));
+
+2.6 py
+        documento = self._campos_de(personaje)
+        documento["inventario"] = []
+        documento["misiones"] = []
+        if self._personajes.find_one({"nombre": personaje.nombre}) is not None:
+            raise DatoDuplicadoException(personaje.nombre)
+        documento["id_personaje"] = self._siguiente_id()
+        try:
+            self._personajes.insert_one(documento)
+        except DuplicateKeyError as error:
+            raise DatoDuplicadoException(personaje.nombre) from error
+        personaje.id = documento["id_personaje"]
+        return personaje
+____________________________________________________________
+2.5 java
+        try (Connection con = conectar();
+             PreparedStatement ps = con.prepareStatement("DELETE FROM personaje WHERE id_personaje = ?")) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            if (e.getErrorCode() == ERROR_FK_EN_USO) {
+                // inventario y personaje_mision se borran en cascada, combate no
+                throw new DatoEnUsoException(id, e);
+            }
+            throw new AccesoDatosException("Error eliminando personaje", e);
+
+
+2.5 py
+        with self._conectar() as conexion:
+            try:
+                with conexion.cursor() as cursor:
+                    filas = cursor.execute("DELETE FROM personaje WHERE id_personaje = %s", (id,))
+                conexion.commit()
+            except pymysql.err.IntegrityError as error:
+                conexion.rollback()
+                if error.args[0] == ERROR_FK_EN_USO:
+                    # inventario y personaje_mision se borran en cascada, combate no
+                    raise DatoEnUsoException(id) from error
+                raise
+        return filas > 0
+_______________________________________________
+
+2.4 java
+            ponerCampos(ps, p);
+            ps.executeUpdate();          // JDBC hace commit automático (autocommit)
+            try (ResultSet claves = ps.getGeneratedKeys()) {
+                if (claves.next()) {
+                    p.setId(claves.getInt(1));    // id generado por AUTO_INCREMENT
+                }
+            }
+            return p;
+        } catch (SQLException e) {
+            if (e.getErrorCode() == ERROR_DUPLICADO) {
+                throw new DatoDuplicadoException(p.getNombre(), e);
+            }
+            throw new AccesoDatosException("Error guardando personaje", e);
+
+
+2.4 py
+
+        with self._conectar() as conexion:
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute(sql, valores)
+                    personaje.id = cursor.lastrowid    # id generado por AUTO_INCREMENT
+                conexion.commit()                       # sin commit, el INSERT no queda guardado
+            except pymysql.err.IntegrityError as error:
+                conexion.rollback()
+                if error.args[0] == ERROR_DUPLICADO:
+                    raise DatoDuplicadoException(personaje.nombre) from error
+                raise
+        return personaje
+_____________________________________________________________
+
+2.3 java 
+        try (Connection con = conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            for (int i = 0; i < parametros.length; i++) {
+                ps.setObject(i + 1, parametros[i]);
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    resultado.add(filaAPersonaje(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new AccesoDatosException("Error consultando personajes", e);
+        }
+        return resultado;
+
+2.3 py
+        resultado = []
+        with self._conectar() as conexion, conexion.cursor() as cursor:
+            cursor.execute(sql, parametros)
+            for fila in cursor.fetchall():
+                resultado.append(self._fila_a_personaje(fila))
+        return resultado
+__________________________________________
+
+2.2 java
+        for (Personaje existente : datos.values()) {
+            if (existente.getNombre().equals(p.getNombre())) {     // equals, no ==
+                throw new DatoDuplicadoException(p.getNombre(), null);
+            }
+        }
+        p.setId(siguienteId++);
+        datos.put(p.getId(), p);
+        inventarios.put(p.getId(), new ArrayList<>());
+        return p;
+
+2.2 py
+        for existente in self._datos.values():
+            if existente.nombre == personaje.nombre:
+                raise DatoDuplicadoException(personaje.nombre)
+        personaje.id = self._siguiente_id
+        self._siguiente_id += 1
+        self._datos[personaje.id] = personaje
+        self._inventarios[personaje.id] = []
+        return personaje
+____________________________________________
+2.1
+java
+    /** Guarda un personaje nuevo, le asigna su id y lo devuelve. */
+    Personaje guardar(Personaje p);
+
+    /** Devuelve el personaje con ese id, o null si no existe. */
+    Personaje buscarPorId(int id);
+
+    /** Devuelve una lista NUEVA con todos los personajes. */
+    List<Personaje> listarTodos();
+
+    /** Devuelve una lista nueva con los personajes de esa clase. */
+    List<Personaje> listarPorClase(String clase);
+
+    /** Guarda los cambios de un personaje existente. true si existía. */
+    boolean actualizar(Personaje p);
+
+    /** Borra el personaje. true si existía. */
+    boolean eliminar(int id);
+
+    /** Devuelve los ítems del personaje (lista vacía si no tiene). */
+    List<Item> listarInventario(int idPersonaje);
+
+
+2.1 py
+
+    @abstractmethod
+    def guardar(self, personaje):
+        """Guarda un personaje nuevo, le asigna su id y lo devuelve."""
+
+    @abstractmethod
+    def buscar_por_id(self, id):
+        """Devuelve el personaje con ese id, o None si no existe."""
+
+    @abstractmethod
+    def listar_todos(self):
+        """Devuelve una lista NUEVA con todos los personajes."""
+
+    @abstractmethod
+    def listar_por_clase(self, clase):
+        """Devuelve una lista nueva con los personajes de esa clase."""
+
+    @abstractmethod
+    def actualizar(self, personaje):
+        """Guarda los cambios de un personaje existente. True si existía."""
+
+    @abstractmethod
+    def eliminar(self, id):
+        """Borra el personaje. True si existía."""
+
+    @abstractmethod
+    def listar_inventario(self, id_personaje):
+        """Devuelve la lista de ítems del personaje (vacía si no tiene)."""
