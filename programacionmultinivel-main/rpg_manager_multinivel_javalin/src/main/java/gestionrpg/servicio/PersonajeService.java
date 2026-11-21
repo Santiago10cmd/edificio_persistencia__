@@ -41,18 +41,18 @@ public class PersonajeService {
     // >>> SALA 3.2 · Obtener: de null a 404
     // Arma este bloque en el Edificio de la Persistencia (pestaña Java),
     // pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-            Personaje p = FabricaPersonajes.crear(clase, null, nombre, nivel, vida, ataque,
-                oro.setScale(2, RoundingMode.HALF_UP), null, null);
-        try {
-            return repositorio.guardar(p);
-        } catch (DatoDuplicadoException e) {
-            throw new ValidacionException("Ya existe un personaje llamado " + nombre);
-rpg_manager_multinivel_flask/servicio/personaje_service.py
-        personaje = crear_personaje(clase, nombre, nivel, vida, ataque, oro)
-        try:
-            return self._repositorio.guardar(personaje)
-        except DatoDuplicadoException:
-            raise ValidacionException(f"Ya existe un personaje llamado {nombre}")
+    public Personaje obtener(int id) {
+        Personaje p = repositorio.buscarPorId(id);
+        if (p == null) {
+            throw new PersonajeNoEncontradoException(id);
+        }
+        return p;
+    }
+
+    public List<Item> inventario(int id) {
+        obtener(id);    // 404 si el personaje no existe
+        return repositorio.listarInventario(id);
+    }
     // <<< FIN SALA 3.2
     }
 
@@ -66,6 +66,22 @@ rpg_manager_multinivel_flask/servicio/personaje_service.py
         // >>> SALA 3.4 · Agregar ítem: reglas del negocio
         // Arma este bloque en el Edificio de la Persistencia (pestaña Java),
         // pulsa «Copiar bloque» y pégalo entre estas dos marcas.
+        public List<Item> agregarItem(int id, String nombreItem, int cantidad) {
+        obtener(id);
+        if (cantidad < 1 || cantidad > 99) {
+            throw new ValidacionException("La cantidad debe estar entre 1 y 99");
+        }
+        boolean existe = false;
+        for (Item item : repositorio.listarCatalogo()) {
+            if (item.getNombre().equals(nombreItem)) {
+                existe = true;
+            }
+        }
+        if (!existe) {
+            throw new ValidacionException("No existe el ítem " + nombreItem);
+        }
+        repositorio.agregarItem(id, nombreItem, cantidad);
+        return repositorio.listarInventario(id);
         // <<< FIN SALA 3.4
     }
 
@@ -102,9 +118,14 @@ rpg_manager_multinivel_flask/servicio/personaje_service.py
         // >>> SALA 3.3 · Crear: validar y traducir
         // Arma este bloque en el Edificio de la Persistencia (pestaña Java),
         // pulsa «Copiar bloque» y pégalo entre estas dos marcas.
+        personaje = crear_personaje(clase, nombre, nivel, vida, ataque, oro)
+        try:
+            return self._repositorio.guardar(personaje)
+        except DatoDuplicadoException:
+            raise ValidacionException(f"Ya existe un personaje llamado {nombre}")
         // <<< FIN SALA 3.3
         }
-    }
+    
 
     public Personaje actualizarVida(int id, int vida) {
         if (vida < 0) {

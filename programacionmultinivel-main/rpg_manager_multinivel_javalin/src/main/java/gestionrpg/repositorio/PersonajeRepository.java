@@ -30,6 +30,7 @@ public interface PersonajeRepository {
 
     /** Devuelve los ítems del personaje (lista vacía si no tiene). */
     List<Item> listarInventario(int idPersonaje);
+
     /** Devuelve todos los ítems que existen en el juego (la tabla item). */
     List<Item> listarCatalogo();
 
@@ -42,24 +43,3 @@ public interface PersonajeRepository {
     /** Saca el ítem completo del inventario. true si lo tenía. */
     boolean quitarItem(int idPersonaje, String nombreItem);
 }
-
-    /** Guarda un personaje nuevo, le asigna su id y lo devuelve. */
-    Personaje guardar(Personaje p);
-
-    /** Devuelve el personaje con ese id, o null si no existe. */
-    Personaje buscarPorId(int id);
-
-    /** Devuelve una lista NUEVA con todos los personajes. */
-    List<Personaje> listarTodos();
-
-    /** Devuelve una lista nueva con los personajes de esa clase. */
-    List<Personaje> listarPorClase(String clase);
-
-    /** Guarda los cambios de un personaje existente. true si existía. */
-    boolean actualizar(Personaje p);
-
-    /** Borra el personaje. true si existía. */
-    boolean eliminar(int id);
-
-    /** Devuelve los ítems del personaje (lista vacía si no tiene). */
-    List<Item> listarInventario(int idPersonaje);

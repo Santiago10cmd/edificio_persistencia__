@@ -38,7 +38,7 @@ class PersonajeService:
     # >>> SALA 3.2 · Obtener: de null a 404
     # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
     # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-        def obtener(self, id):
+    def obtener(self, id):
         personaje = self._repositorio.buscar_por_id(id)
         if personaje is None:
             raise PersonajeNoEncontradoException(f"No existe el personaje {id}")
@@ -58,6 +58,17 @@ class PersonajeService:
         # >>> SALA 3.4 · Agregar ítem: reglas del negocio
         # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
         # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
+                self.obtener(id)
+        cantidad = self._entero(cantidad, "cantidad")
+        if not 1 <= cantidad <= 99:
+            raise ValidacionException("La cantidad debe estar entre 1 y 99")
+        nombres = []
+        for item in self._repositorio.listar_catalogo():
+            nombres.append(item.nombre)
+        if nombre_item not in nombres:
+            raise ValidacionException(f"No existe el ítem {nombre_item}")
+        self._repositorio.agregar_item(id, nombre_item, cantidad)
+        return self._repositorio.listar_inventario(id)
         # <<< FIN SALA 3.4
 
     def quitar_item(self, id, nombre_item):
@@ -90,17 +101,12 @@ class PersonajeService:
         # >>> SALA 3.3 · Crear: validar y traducir
         # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
         # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-                self.obtener(id)
-        cantidad = self._entero(cantidad, "cantidad")
-        if not 1 <= cantidad <= 99:
-            raise ValidacionException("La cantidad debe estar entre 1 y 99")
-        nombres = []
-        for item in self._repositorio.listar_catalogo():
-            nombres.append(item.nombre)
-        if nombre_item not in nombres:
-            raise ValidacionException(f"No existe el ítem {nombre_item}")
-        self._repositorio.agregar_item(id, nombre_item, cantidad)
-        return self._repositorio.listar_inventario(id)
+
+        personaje = crear_personaje(clase, nombre, nivel, vida, ataque, oro)
+        try:
+            return self._repositorio.guardar(personaje)
+        except DatoDuplicadoException:
+            raise ValidacionException(f"Ya existe un personaje llamado {nombre}")
         # <<< FIN SALA 3.3
 
     def actualizar_vida(self, id, vida):
