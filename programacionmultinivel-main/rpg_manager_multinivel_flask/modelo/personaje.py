@@ -18,7 +18,10 @@ class Personaje:
     # >>> SALA 1.1 · Personaje: la clase base
     # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
     # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
+<<<<<<< HEAD
     
+=======
+>>>>>>> 2af8e7b685c6c67c8f72f2cc87c3d51e551fd2dc
     # <<< FIN SALA 1.1
 
 class Personaje:
@@ -84,6 +87,7 @@ def crear_personaje(clase, nombre, nivel=1, vida=100, ataque=10, oro=Decimal("0"
     La usan los tres repositorios: una fila de MariaDB, un documento de MongoDB
     o un formulario dicen "Mago", y aquí se decide qué objeto crear.
     """
+<<<<<<< HEAD
     if clase == "Guerrero":
         return Guerrero(nombre, nivel, vida, ataque, oro, id)
     if clase == "Mago":
@@ -93,6 +97,12 @@ def crear_personaje(clase, nombre, nivel=1, vida=100, ataque=10, oro=Decimal("0"
         return Arquero(nombre, nivel, vida, ataque, oro, id,
                        precision if precision is not None else PRECISION_POR_DEFECTO)
     raise ValueError(f"Clase desconocida: {clase}"
+=======
+    # >>> SALA 1.3 · La fábrica de personajes
+    # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
+    # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
+    # <<< FIN SALA 1.3
+>>>>>>> 2af8e7b685c6c67c8f72f2cc87c3d51e551fd2dc
 
 
 # >>> SALA 1.4 · Item: el ítem del inventario
