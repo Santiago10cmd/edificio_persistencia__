@@ -67,6 +67,32 @@ class RepositorioMariaDB(PersonajeRepository):
         # >>> SALA 2.4 · MariaDB: guardar con INSERT
         # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
         # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
+        with self._conectar() as conexion:
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute(sql, valores)
+                    personaje.id = cursor.lastrowid    # id generado por AUTO_INCREMENT
+                conexion.commit()                       # sin commit, el INSERT no queda guardado
+            except pymysql.err.IntegrityError as error:
+                conexion.rollback()
+                if error.args[0] == ERROR_DUPLICADO:
+                    raise DatoDuplicadoException(personaje.nombre) from error
+                raise
+        return personaje
+rpg_manager_multinivel_flask/repositorio/repositorio_mariadb.py
+        with self._conectar() as conexion:
+            try:
+                with conexion.cursor() as cursor:
+                    filas = cursor.execute("DELETE FROM personaje WHERE id_personaje = %s", (id,))
+                conexion.commit()
+            except pymysql.err.IntegrityError as error:
+                conexion.rollback()
+                if error.args[0] == ERROR_FK_EN_USO:
+                    # inventario y personaje_mision se borran en cascada, combate no
+                    raise DatoEnUsoException(id) from error
+                raise
+        return filas > 0
+
         # <<< FIN SALA 2.4
 
     def buscar_por_id(self, id):
