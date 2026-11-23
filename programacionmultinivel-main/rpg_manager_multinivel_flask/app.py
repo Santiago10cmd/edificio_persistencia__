@@ -21,7 +21,12 @@ CARPETA = os.path.dirname(os.path.abspath(__file__))
 def leer_configuracion(ruta=None):
     ruta = ruta or os.path.join(CARPETA, "config.ini")
     if not os.path.exists(ruta):
-        sys.exit("No existe config.ini. Copia config.example.ini como config.ini y pon tus datos.")
+        ejemplo = os.path.join(CARPETA, "config.example.ini")
+        if not os.path.exists(ejemplo):
+            sys.exit(f"No se encontró config.ini ni config.example.ini en {CARPETA}.")
+        ruta = ejemplo
+        print("Aviso: no existe config.ini; se usará config.example.ini (repositorio en memoria).",
+              file=sys.stderr)
     cfg = configparser.ConfigParser()
     cfg.read(ruta, encoding="utf-8")
     return cfg

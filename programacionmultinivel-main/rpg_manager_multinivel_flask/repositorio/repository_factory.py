@@ -9,9 +9,7 @@ from repositorio.repositorio_mongo import RepositorioMongo
 
 def crear_repositorio(cfg):
     # >>> SALA 2.7 · El selector: fábrica y configuración
-    # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
-    # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-        tipo = cfg.get("app", "repositorio", fallback="").strip().lower()
+    tipo = cfg.get("app", "repositorio", fallback="").strip().lower()
     if tipo == "memoria":
         return RepositorioMemoria()
     elif tipo == "mariadb":

@@ -16,12 +16,6 @@ class Personaje:
     clase = "Personaje"
 
     # >>> SALA 1.1 · Personaje: la clase base
-    # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
-    # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-    class Personaje:
-    """Datos comunes a todos los personajes."""
-
-    clase = "Personaje"
     def __init__(self, nombre, nivel=1, vida=100, ataque=10, oro=Decimal("0"), id=None):
         self.id = id
         self.nombre = nombre
@@ -30,10 +24,19 @@ class Personaje:
         self.ataque = ataque
         self.oro = Decimal(str(oro))
 
+    def a_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "clase": self.clase,
+            "nivel": self.nivel,
+            "vida": self.vida,
+            "ataque": self.ataque,
+            "oro": float(self.oro),
+        }
+
     # <<< FIN SALA 1.1
 
-
-        
     def __repr__(self):
         return f"{self.clase}(id={self.id}, nombre={self.nombre!r}, nivel={self.nivel}, vida={self.vida})"
 
@@ -46,11 +49,6 @@ class Mago(Personaje):
     clase = "Mago"
 
     # >>> SALA 1.2 · Mago y Arquero: herencia
-    # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
-    # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-    
-class Mago(Personaje):
-    clase = "Mago"
     def __init__(self, nombre, nivel=1, vida=100, ataque=10, oro=Decimal("0"), id=None,
                  mana=MANA_POR_DEFECTO):
         super().__init__(nombre, nivel, vida, ataque, oro, id)
@@ -94,31 +92,9 @@ def crear_personaje(clase, nombre, nivel=1, vida=100, ataque=10, oro=Decimal("0"
     if clase == "Arquero":
         return Arquero(nombre, nivel, vida, ataque, oro, id,
                        precision if precision is not None else PRECISION_POR_DEFECTO)
-    raise ValueError(f"Clase desconocida: {clase}"
-=======
-    # >>> SALA 1.3 · La fábrica de personajes
-    # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
-    # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-            switch (clase) {
-            case "Guerrero":
-                return new Guerrero(id, nombre, nivel, vida, ataque, oro);
-            case "Mago":
-                return new Mago(id, nombre, nivel, vida, ataque, oro,
-                        mana != null ? mana : Mago.MANA_POR_DEFECTO);
-            case "Arquero":
-                return new Arquero(id, nombre, nivel, vida, ataque, oro,
-                        precision != null ? precision : Arquero.PRECISION_POR_DEFECTO);
-            default:
-                throw new IllegalArgumentException("Clase desconocida: " + clase);
-
-    # <<< FIN SALA 1.3
-
-
+    raise ValueError(f"Clase desconocida: {clase}")
 
 # >>> SALA 1.4 · Item: el ítem del inventario
-# Arma este bloque en el Edificio de la Persistencia (pestaña Python),
-# pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-# <<< FIN SALA 1.4
 
 class Item:
     """Un ítem dentro del inventario de un personaje."""
@@ -128,9 +104,10 @@ class Item:
         self.tipo = tipo
         self.valor = valor
         self.cantidad = cantidad
-    
-def a_dict(self):
+
+    def a_dict(self):
         return {"nombre": self.nombre, "tipo": self.tipo, "valor": self.valor, "cantidad": self.cantidad}
 
     def __repr__(self):
         return f"Item({self.nombre!r} x{self.cantidad})"
+# <<< FIN SALA 1.4

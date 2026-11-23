@@ -63,9 +63,9 @@ public class Main {
 
         Javalin app = Javalin.create();
         controlador.registrarRutas(app);
-        app.start(7070);
+        app.start(7071);
         // <<< FIN SALA 4.1
-        System.out.println("RPG Manager en http://localhost:7070/personajes · repositorio: "
+        System.out.println("RPG Manager en http://localhost:7071/personajes · repositorio: "
                 + cfg.getProperty("repositorio"));
     }
 }

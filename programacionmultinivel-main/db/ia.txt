@@ -1,0 +1,23 @@
+1. Dataset Seleccionado de UCI: Online Shoppers Purchasing Intention
+* Registros: 12,330 instancias (supera ampliamente los 2,000 requeridos).
+* Origen: Repositorio UCI (datos reales de sesiones de usuarios en una tienda virtual).
+* Atributos incluidos:
+  * Comportamiento de navegación: Número de páginas administrativas, informativas y de productos visitadas.
+  * Métricas técnicas: Tiempo de permanencia en cada tipo de página, tasas de rebote (bounce rate), tasas de salida (exit rate) y valor promedio de las páginas visitadas.
+  * Contexto del usuario: Tipo de visitante (nuevo o recurrente), si es un día especial (cercano a festividades como San Valentín o Navidad), mes del año y sistema operativo.
+
+
+
+2. La Problemática a Solucionar: Predicción de Intención de Compra en Tiendas Online (E-commerce Conversion)
+
+Contexto del Problema Real:
+Las tiendas de comercio electrónico reciben millones de visitas diarias, pero más del 90% de los usuarios abandonan el sitio web sin comprar nada. Las plataformas gastan mucho dinero en publicidad para atraer tráfico, pero no saben en tiempo real qué usuarios están realmente interesados en adquirir un producto y cuáles solo están navegando sin rumbo.
+
+El Reto (Problema a resolver):
+Predecir con anticipación si un visitante completará una compra (Revenue = TRUE) o si abandonará la tienda sin comprar (Revenue = FALSE), basándose únicamente en su comportamiento de navegación durante la sesión actual (páginas vistas, tiempo de permanencia y tasas de rebote).
+
+Aplicación Práctica:
+* La plataforma de E-commerce puede activar estrategias automáticas en tiempo real (por ejemplo, mostrar un descuento por chat emergente, un cupón de envío gratis o asistencia personalizada) únicamente a los usuarios que el modelo prediga que tienen alta probabilidad de irse sin comprar, reduciendo el abandono del carrito de compras y aumentando las ventas de la tienda virtual.
+
+
+https://archive.ics.uci.edu/dataset/468/online+shoppers+purchasing+intention+dataset

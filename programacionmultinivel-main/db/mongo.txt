@@ -1,0 +1,4 @@
+sant1agoru1z1097_db_user
+FWsORGB7pWRCrP0i
+
+mongo.uri=mongodb+srv://USUARIO:CONTRASEÑA@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority

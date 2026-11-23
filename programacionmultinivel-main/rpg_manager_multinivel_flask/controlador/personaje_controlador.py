@@ -40,9 +40,7 @@ def crear_controlador(service, motor):
     def crear():
         datos = request.form
         # >>> SALA 4.2 · La ruta POST crear
-        # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
-        # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-                try:
+        try:
             service.crear(datos.get("nombre"), datos.get("clase"), datos.get("nivel", 1),
                           datos.get("vida", 100), datos.get("ataque", 10), datos.get("oro", 0))
         except ValidacionException as e:
@@ -63,9 +61,7 @@ def crear_controlador(service, motor):
     @bp.post("/personajes/<int:id>/inventario")
     def agregar_item(id):
         # >>> SALA 4.3 · Las rutas del inventario
-        # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
-        # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-                try:
+        try:
             service.agregar_item(id, request.form.get("item"), request.form.get("cantidad", 1))
         except PersonajeNoEncontradoException as e:
             return render_template("error.html", mensaje=str(e)), 404

@@ -56,9 +56,7 @@ class PersonajeService:
 
     def agregar_item(self, id, nombre_item, cantidad=1):
         # >>> SALA 3.4 · Agregar ítem: reglas del negocio
-        # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
-        # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-                self.obtener(id)
+        self.obtener(id)
         cantidad = self._entero(cantidad, "cantidad")
         if not 1 <= cantidad <= 99:
             raise ValidacionException("La cantidad debe estar entre 1 y 99")

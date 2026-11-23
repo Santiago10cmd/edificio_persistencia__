@@ -93,9 +93,7 @@ class RepositorioMongo(PersonajeRepository):
 
     def guardar(self, personaje):
         # >>> SALA 2.6 · MongoDB: guardar con contador
-        # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
-        # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-                documento = self._campos_de(personaje)
+        documento = self._campos_de(personaje)
         documento["inventario"] = []
         documento["misiones"] = []
         if self._personajes.find_one({"nombre": personaje.nombre}) is not None:
@@ -153,9 +151,7 @@ class RepositorioMongo(PersonajeRepository):
     def agregar_item(self, id_personaje, nombre_item, cantidad):
         # 1. Si ya lo tiene: $inc sobre ese elemento del arreglo ($ = el que cumplió el filtro)
         # >>> SALA 2.8 · Inventario: agregar un ítem
-        # Arma este bloque en el Edificio de la Persistencia (pestaña Python),
-        # pulsa «Copiar bloque» y pégalo entre estas dos marcas.
-                resultado = self._personajes.update_one(
+        resultado = self._personajes.update_one(
             {"id_personaje": id_personaje, "inventario.item": nombre_item},
             {"$inc": {"inventario.$.cantidad": cantidad}})
         if resultado.matched_count > 0:
